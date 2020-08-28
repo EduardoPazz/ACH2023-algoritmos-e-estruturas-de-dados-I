@@ -28,4 +28,6 @@ void main() {
 	int* arr = alloc(size);
 	insertRand(arr, size);
 	print(arr, size);
+
+	free(arr);
 }
