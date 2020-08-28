@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int* initialize(int n) {
+int* alloc(int n) {
 	return (int*) malloc(sizeof(int) * n);
 }
 
@@ -25,7 +25,7 @@ void print(int* arr, int size) {
 
 void main() {
 	int size = 3;
-	int* arr = initialize(size);
+	int* arr = alloc(size);
 	insertRand(arr, size);
 	print(arr, size);
 }
