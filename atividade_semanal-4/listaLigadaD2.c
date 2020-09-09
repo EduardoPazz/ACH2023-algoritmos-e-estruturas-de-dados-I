@@ -148,15 +148,16 @@ bool inserirElemListaOrd(LISTA* l, REGISTRO reg) {
   i = (PONT) malloc(sizeof(ELEMENTO));
   i->reg = reg;
   if (ant == NULL) { // O novo elemento será o 1º da lista
-    i->prox = l->inicio; // Faz o novo primeiro elemento apontar para o novo segundo elemento (caso exista)
+    i->prox = l->inicio; // Faz o novo primeiro elemento apontar para o então segundo elemento (caso exista)
     l->inicio = i; // Oficializa o novo elemento como "primeiro"
-    if (i->prox != NULL) i->prox->ant = i; // Faz o elemento seguinte ao novo apontar para ele, caso este seguinte exista
   } else {  // inserção após um elemento que já existente
-    i->prox = ant->prox; // Faz o novo primeiro elemento apontar para o novo segundo elemento (caso exista)
-    ant->prox = i; // Faz o elemento anterior apontar para o novo elemento
-    if (i->prox != NULL) i->prox->ant = i; // Faz o elemento seguinte ao novo apontar para ele, caso este seguinte exista
+    i->prox = ant->prox; // Faz o novo elemento apontar para o elemento seguinte (caso exista)
+    ant->prox = i; // Faz o elemento anterior apontar para o novo elemento    
     i->ant = ant; // Faz o novo elemento apontar para o seu anterior
   }  
+	
+	if (i->prox != NULL) i->prox->ant = i; // Faz o elemento seguinte ao novo apontar para ele, caso este seguinte exista
+
   return true;
 } /* inserirElemListaOrd */
 
