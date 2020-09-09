@@ -147,15 +147,15 @@ bool inserirElemListaOrd(LISTA* l, REGISTRO reg) {
   if (i != NULL)  return false;
   i = (PONT) malloc(sizeof(ELEMENTO));
   i->reg = reg;
-  if (ant == NULL) { // o novo elemento serah o 1o da lista
-    i->prox = l->inicio;
-    l->inicio = i;
-    if (i->prox != NULL) i->prox->ant = i;
-  } else {  // inser��o ap�s um elemento j� existente
-    i->prox = ant->prox;
-    ant->prox = i;
-    if (i->prox != NULL) i->prox->ant = i;
-    i->ant = ant;
+  if (ant == NULL) { // O novo elemento será o 1º da lista
+    i->prox = l->inicio; // Faz o novo primeiro elemento apontar para o novo segundo elemento (caso exista)
+    l->inicio = i; // Oficializa o novo elemento como "primeiro"
+    if (i->prox != NULL) i->prox->ant = i; // Faz o elemento seguinte ao novo apontar para ele, caso este seguinte exista
+  } else {  // inserção após um elemento que já existente
+    i->prox = ant->prox; // Faz o novo primeiro elemento apontar para o novo segundo elemento (caso exista)
+    ant->prox = i; // Faz o elemento anterior apontar para o novo elemento
+    if (i->prox != NULL) i->prox->ant = i; // Faz o elemento seguinte ao novo apontar para ele, caso este seguinte exista
+    i->ant = ant; // Faz o novo elemento apontar para o seu anterior
   }  
   return true;
 } /* inserirElemListaOrd */
@@ -194,6 +194,14 @@ void main() {
   inserirElemListaOrd(&l, reg);
   reg.chave = 1;
   inserirElemListaOrd(&l, reg);
+  reg.chave = 7;
+  inserirElemListaOrd(&l, reg);
+  reg.chave = 11;
+  inserirElemListaOrd(&l, reg);
+  reg.chave = 99;
+  inserirElemListaOrd(&l, reg);
+  reg.chave = 55;
+  inserirElemListaOrd(&l, reg);
   
 
   // Testa o tamanho da lista
@@ -208,6 +216,8 @@ void main() {
   
   // Testa exclusão
   excluirElemLista(&l, 4);
+  excluirElemLista(&l, 7);
+  excluirElemLista(&l, 55);
 
   // Testa o tamanho da lista
   printf("Nº de Elementos: %d\n", tamanho(&l));
