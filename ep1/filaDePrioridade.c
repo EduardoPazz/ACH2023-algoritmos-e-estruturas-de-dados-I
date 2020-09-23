@@ -31,16 +31,16 @@ PFILA criarFila(int max){
 void exibirLog(PFILA f){
   printf("Log [elementos: %i (alem do no cabeca)]\n", tamanho(f));
   PONT atual = f->fila;
-  printf("%p[%i;%f;%p]%p \n", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
+  printf("%p[%i;%f;%p]%p", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
   atual = atual->prox;
   while (atual != f->fila){
-    printf("%p[%i;%f;%p]%p \n", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
+    printf("%p[%i;%f;%p]%p", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
     atual = atual->prox;
   }
-  printf("\nElementos validos: \n");
+  printf("\nElementos validos:");
   atual = atual->prox;
   while (atual != f->fila){
-    printf("[%i;%f;%p] \n", atual->id, atual->prioridade, atual);
+    printf("[%i;%f;%p]", atual->id, atual->prioridade, atual);
     atual = atual->prox;
   }
 
@@ -68,30 +68,33 @@ int tamanho(PFILA f){
 bool testaID(PFILA f, int id, CATEGORIA cat) {
   /* 
     Categorias:
-    I: Inserção de elemento
-    P: Alteração de prioridade
+    N: Testa se o endereço é nulo, como no caso da Inserção
+    E: Testa se há um endereço válido, como no caso das mudanças e consulta de prioridade
   */
 
 
   if (id < 0 || id >= f->maxElementos) return false;
 
   switch (cat) { // TODO: aprimorar este bloco
-    case 'I': if (f->arranjo[id] != NULL) return false; else break;
-    case 'P': if (f->arranjo[id] == NULL) return false; else break;
+    case 'N': if (f->arranjo[id] != NULL) return false; else break;
+    case 'E': if (f->arranjo[id] == NULL) return false;
   }
 
   return true;
 }
 
+void corrigeGap(PONT meio) {
+  /* 
+    Corrige o gap deixado pela antiga posição do elemento "meio",
+    seja pelo caso de ele ter mudado de posição por conta de uma ou 
+    mudança de prioridade ou pelo caso de o elemento ter sido excluído.
+  */  
+  meio->ant->prox = meio->prox;
+  meio->prox->ant = meio->ant;  
+}
+
 void corrigePonteiros(PONT ant, PONT meio, PONT pos, bool gap) {
-  if (gap) {
-    /* 
-      Corrige o gap deixado pela antiga posição do elemento "meio",
-      no caso de ele ter mudado de posição por conta de uma mudança de prioridade.
-    */
-    meio->ant->prox = meio->prox;
-    meio->prox->ant = meio->ant;
-  }
+  if (gap) corrigeGap(meio);
 
   ant->prox = meio;
   pos->ant = meio;
@@ -112,7 +115,7 @@ void buscaSeqInsercao(PFILA f, float prioridade, PONT* pParaPos, PONT* pParaAnt)
 bool inserirElemento(PFILA f, int id, float prioridade){
   bool resposta = false;
 
-  if (!testaID(f, id, 'I')) return resposta;
+  if (!testaID(f, id, 'N')) return resposta;
 
   PONT pos;
   PONT ant;
@@ -155,7 +158,7 @@ void buscaSeqPrioridade(PFILA f, PONT* pParaAnt, PONT escolhido, PONT* pParaPos,
 bool aumentarPrioridade(PFILA f, int id, float novaPrioridade){
   bool resposta = false;
 
-  if(!testaID(f, id, 'P') || f->arranjo[id]->prioridade >= novaPrioridade) return resposta;
+  if(!testaID(f, id, 'E') || f->arranjo[id]->prioridade >= novaPrioridade) return resposta;
 
   PONT escolhido = f->arranjo[id];
 
@@ -180,7 +183,7 @@ bool aumentarPrioridade(PFILA f, int id, float novaPrioridade){
 bool reduzirPrioridade(PFILA f, int id, float novaPrioridade){
   bool resposta = false;
 
-  if(!testaID(f, id, 'P') || f->arranjo[id]->prioridade <= novaPrioridade) return resposta;
+  if(!testaID(f, id, 'E') || f->arranjo[id]->prioridade <= novaPrioridade) return resposta;
 
   PONT escolhido = f->arranjo[id];
 
@@ -205,7 +208,13 @@ bool reduzirPrioridade(PFILA f, int id, float novaPrioridade){
 PONT removerElemento(PFILA f){
   PONT resposta = NULL;
 
-  /* COMPLETAR */
+  if (!tamanho(f)) return resposta;
+
+  resposta = f->fila->prox;
+
+  f->arranjo[resposta->id] = NULL;
+
+  corrigeGap(resposta);
 
   return resposta;
 }
@@ -215,24 +224,9 @@ PONT removerElemento(PFILA f){
 bool consultarPrioridade(PFILA f, int id, float* resposta){
   bool resp = false;
 
-  /* COMPLETAR */
+  if (!testaID(f, id, 'E')) return resp;
+
+  *resposta = f->arranjo[id]->prioridade;
 
   return resp;
-}
-
-
-void main() {
-  PFILA f = criarFila(5);
-  inserirElemento(f, 0, 40);
-  inserirElemento(f, 4, 70);
-  inserirElemento(f, 3, 78);
-  exibirLog(f);
-  aumentarPrioridade(f, 4, 500);
-  exibirLog(f);
-  aumentarPrioridade(f, 0, 7000);
-  exibirLog(f);
-  aumentarPrioridade(f, 4, 700);
-  exibirLog(f);
-  reduzirPrioridade(f, 4, 10);
-  exibirLog(f);
 }
