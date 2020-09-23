@@ -29,20 +29,20 @@ PFILA criarFila(int max){
 void exibirLog(PFILA f){
   printf("Log [elementos: %i (alem do no cabeca)]\n", tamanho(f));
   PONT atual = f->fila;
-  printf("%p[%i;%f;%p]%p ", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
+  printf("%p[%i;%f;%p]%p \n", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
   atual = atual->prox;
   while (atual != f->fila){
-    printf("%p[%i;%f;%p]%p ", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
+    printf("%p[%i;%f;%p]%p \n", atual->ant, atual->id, atual->prioridade, atual, atual->prox);
     atual = atual->prox;
   }
-  printf("\nElementos validos: ");
+  printf("\nElementos validos: \n");
   atual = atual->prox;
   while (atual != f->fila){
-    printf("[%i;%f;%p] ", atual->id, atual->prioridade, atual);
+    printf("[%i;%f;%p] \n", atual->id, atual->prioridade, atual);
     atual = atual->prox;
   }
 
-  printf("\nValores do arrajo:\n\[ ");
+  printf("\nValores do arranjo:\n\[ ");
   int x;
   for (x=0;x<f->maxElementos;x++) printf("%p ",f->arranjo[x]);
   printf("]\n\n");
@@ -53,17 +53,51 @@ void exibirLog(PFILA f){
 int tamanho(PFILA f){
   int tam = 0;
 
-  /* COMPLETAR */
+  PONT jumper = f->fila->prox;
+
+  while (jumper != f->fila) {
+    tam++;
+    jumper = jumper->prox;
+  }
 
   return tam;
 }
 
+void buscaSeqExc(PFILA f, float prioridade, PONT* pToPos, PONT* pToAnt) {
+  *pToAnt = f->fila;
+  *pToPos = (*pToAnt)->prox;
 
+  while ((*pToPos)->prioridade > prioridade && (*pToPos)->prioridade != f->fila->prioridade) {
+    *pToAnt = *pToPos;
+    *pToPos = (*pToPos)->prox;
+  }
+}
 
 bool inserirElemento(PFILA f, int id, float prioridade){
   bool resposta = false;
 
-  /* COMPLETAR */
+  if (id < 0 || id >= f->maxElementos || f->arranjo[id] != NULL) return resposta; 
+
+  PONT pos;
+  PONT ant;
+
+  buscaSeqExc(f, prioridade, &pos, &ant);
+
+  PONT novoElemento = (PONT) malloc(sizeof(ELEMENTO));
+
+  f->arranjo[id] = novoElemento;
+
+  ant->prox = novoElemento;
+  novoElemento->ant = ant;
+  novoElemento->prox = pos;
+  pos->ant = novoElemento;
+
+  novoElemento->id = id;
+  novoElemento->prioridade = prioridade;
+
+  /* printf("(111) f: %p ant: %p pos: %p\n", f->fila, ant, pos); fflush(stdout); */
+
+  resposta = true;
 
   return resposta;
 }
@@ -109,3 +143,10 @@ bool consultarPrioridade(PFILA f, int id, float* resposta){
 }
 
 
+void main() {
+  PFILA f = criarFila(5);
+  inserirElemento(f, 0, 5);
+  inserirElemento(f, 4, 5);
+  inserirElemento(f, 3, 5);
+  exibirLog(f);
+}
