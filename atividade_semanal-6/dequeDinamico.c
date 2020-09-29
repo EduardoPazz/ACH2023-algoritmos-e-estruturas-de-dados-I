@@ -30,7 +30,7 @@ typedef struct {
   PONT cabeca;
 } DEQUE;
 
-/* Inicialização do deque (o deque jah esta criado e eh apontado 
+/* Inicializaï¿½ï¿½o do deque (o deque jah esta criado e eh apontado 
 pelo endereco em d) */
 void inicializarDeque(DEQUE* d){
   d->cabeca = (PONT) malloc(sizeof(ELEMENTO));
@@ -38,10 +38,10 @@ void inicializarDeque(DEQUE* d){
   d->cabeca->ant = d->cabeca;
 } /* inicializarDeque */
 
-/* Exibição do DEQUE a partir do inicio1 */
+/* Exibiï¿½ï¿½o do DEQUE a partir do inicio1 */
 void exibirDequeInicio(DEQUE* d){
   PONT end = d->cabeca->prox;
-  printf("Deque partindo do início: \" ");
+  printf("Deque partindo do inï¿½cio: \" ");
   while (end != d->cabeca){
     printf("%i ", end->reg.chave); // soh lembrando TIPOCHAVE = int
     end = end->prox;
@@ -49,7 +49,7 @@ void exibirDequeInicio(DEQUE* d){
   printf("\"\n");
 } /* exibirDequeInicio */ 
 
-/* Exibição do DEQUE a partir do inicio2 */
+/* Exibiï¿½ï¿½o do DEQUE a partir do inicio2 */
 void exibirDequeFim(DEQUE* d){
   PONT end = d->cabeca->ant;
   printf("Deque partindo do fim: \" ");
@@ -96,7 +96,7 @@ PONT buscaSeq(DEQUE* d, TIPOCHAVE ch){
   return NULL;
 } /* buscaSeq */
 
-/* Exclusão do primeiro elemento, entrada 1 do deque 
+/* Exclusï¿½o do primeiro elemento, entrada 1 do deque 
    e colocar o valor da chave do elemento memoria apontada por ch*/
 bool excluirElemDequeInicio(DEQUE* d, REGISTRO* reg){
   if (d->cabeca->prox == d->cabeca) return false;  // deque vazio
@@ -108,7 +108,7 @@ bool excluirElemDequeInicio(DEQUE* d, REGISTRO* reg){
   return true;
 } /* excluirElemDequeInicio */
 
-/* Exclusão do primeiro elemento, entrada 2 do deque
+/* Exclusï¿½o do primeiro elemento, entrada 2 do deque
    e colocar o valor da chave do elemento memoria apontada por ch*/
 bool excluirElemDequeFim(DEQUE* d, REGISTRO* reg){
   if (d->cabeca->prox == d->cabeca) return false;  // deque vazio
@@ -120,7 +120,7 @@ bool excluirElemDequeFim(DEQUE* d, REGISTRO* reg){
   return true;
 } /* excluirElemDequeFim */
 
-/* Reinicialização/Destruição do deque
+/* Reinicializaï¿½ï¿½o/Destruiï¿½ï¿½o do deque
    libera a memoria de todos os elementos do deque*/
 void reinicializarDeque(DEQUE* d) {
   PONT end = d->cabeca->prox;
@@ -133,7 +133,7 @@ void reinicializarDeque(DEQUE* d) {
   d->cabeca->ant = d->cabeca;
 } /* reinicializarDeque */
 
-/* Inserção no deque, entrada 1 */
+/* Inserï¿½ï¿½o no deque, entrada 1 */
 bool inserirDequeInicio(DEQUE* d,REGISTRO reg) {
   PONT i = (PONT) malloc(sizeof(ELEMENTO));
   i->reg = reg;
@@ -144,7 +144,7 @@ bool inserirDequeInicio(DEQUE* d,REGISTRO reg) {
   return true;
 } /* inserirDequeInicio */
 
-/* Inserção no deque, entrada 2 */
+/* Inserï¿½ï¿½o no deque, entrada 2 */
 bool inserirDequeFim(DEQUE* d,REGISTRO reg) {
   PONT i = (PONT) malloc(sizeof(ELEMENTO));
   i->reg = reg;
@@ -174,7 +174,19 @@ PONT retornarPrimeiro2(DEQUE* d, TIPOCHAVE* ch){
 bool encontrarMinMax(DEQUE* d, int* min, int* max) {
   bool resposta = false;
   
-  /* COMPLETAR */
+  PONT jumper = d->cabeca->prox;
+
+  if (jumper == d->cabeca) return resposta; // Deque Vazio
+
+  *max = -2147483648; // Minimum value
+  *min = 2147483647; // Maximum value
+
+  for ( ; jumper != d->cabeca; jumper = jumper->prox) {
+    if (jumper->reg.chave > *max) *max = jumper->reg.chave;
+    if (jumper->reg.chave < *min) *min = jumper->reg.chave;
+  }
   
+  resposta = true;
+
   return resposta;
 } /* encontrarMinMax */
