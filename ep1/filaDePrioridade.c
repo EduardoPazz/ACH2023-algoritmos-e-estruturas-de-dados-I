@@ -76,7 +76,7 @@ bool testaID(PFILA f, int id, CATEGORIA cat) {
   if (id < 0 || id >= f->maxElementos) return false;
 
   switch (cat) { // TODO: aprimorar este bloco
-    case 'N': if (f->arranjo[id] != NULL) return false; else break;
+    case 'N': if (f->arranjo[id] != NULL) return false; break;
     case 'E': if (f->arranjo[id] == NULL) return false;
   }
 
@@ -137,6 +137,13 @@ bool inserirElemento(PFILA f, int id, float prioridade){
 }
 
 void buscaSeqPrioridade(PFILA f, PONT* pParaAnt, PONT escolhido, PONT* pParaPos, CATEGORIA cat) {
+    /* Sobre o CATEGORIA cat
+     *
+     * 'A' para a busca de um aumento de prioridade
+     * 'R' para a busca de uma redução de prioridade
+    */
+
+
   *pParaAnt = escolhido->ant;
   *pParaPos = escolhido->prox;
 
@@ -227,6 +234,8 @@ bool consultarPrioridade(PFILA f, int id, float* resposta){
   if (!testaID(f, id, 'E')) return resp;
 
   *resposta = f->arranjo[id]->prioridade;
+
+  resp = true;
 
   return resp;
 }
