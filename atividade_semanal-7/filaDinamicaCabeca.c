@@ -2,7 +2,7 @@
 //     filaDinamica.c
 // Este programa gerencia filas lineares ligadas (implementacao dinamica).
 // As filas gerenciadas podem ter um numero arbitrario de elementos.
-// Não usaremos sentinela ou cabeça nesta estrutura.
+// Nï¿½o usaremos sentinela ou cabeï¿½a nesta estrutura.
 ******************************************************************************/
 #include <stdio.h>
 #include <malloc.h>
@@ -27,7 +27,7 @@ typedef struct {
   PONT fim;
 } FILA;
 
-/* Inicialização da fila ligada (a fila jah esta criada e eh apontada 
+/* Inicializaï¿½ï¿½o da fila ligada (a fila jah esta criada e eh apontada 
 pelo endereco em f) */
 void inicializarFila(FILA* f){
   f->cabeca = (PONT) malloc(sizeof(ELEMENTO));
@@ -52,7 +52,7 @@ int tamanhoEmBytes(FILA* f) {
   return (tamanho(f)*sizeof(ELEMENTO)) + sizeof(FILA);
 } /* tamanhoEmBytes */
 
-/* Destruição da fila (reinicializar)
+/* Destruiï¿½ï¿½o da fila (reinicializar)
    libera a memoria de todos os elementos da fila*/
 void destruirFila(FILA* f) {
   PONT end = f->cabeca->prox;
@@ -85,20 +85,18 @@ PONT retornarUltimo(FILA* f, TIPOCHAVE* ch){
 
 
 
-/* Inserção no fim da fila */
+/* Inserï¿½ï¿½o no fim da fila */
 bool inserirNaFila(FILA* f,REGISTRO reg) {
 
-  /* COMPLETAR - REVISAR o codigo desta funcao */
-
   PONT novo = (PONT) malloc(sizeof(ELEMENTO));
+
   novo->reg = reg;
-  novo->prox = NULL;
-  if (f->inicio==NULL){
-     f->inicio = novo;
-  }else{
-     f->fim->prox = novo;
-  }
-  f->fim = novo;
+
+  novo->prox = f->cabeca->prox; // Caso ele seja o primeiro elemento a ser inserido, receberÃ¡ como `prox` o valor NULL, o que Ã© esperado
+  f->cabeca->prox = novo;
+  
+  if (!(f->fim)) f->fim = novo; // Caso ele seja o primeiro elemento a ser inserido, ele estarÃ¡ no fim da fila tambÃ©m
+
   return true;
 } /* inserir */
 
@@ -106,24 +104,30 @@ bool inserirNaFila(FILA* f,REGISTRO reg) {
 /* Excluir  */
 bool excluirDaFila(FILA* f, REGISTRO* reg) {
 
-  /* COMPLETAR - REVISAR o codigo desta funcao */
+  if (!(f->fim)) return false;
 
-  if (f->inicio==NULL){
-    return false;                     
-  }
-  *reg = f->inicio->reg;
-  PONT apagar = f->inicio;
-  f->inicio = f->inicio->prox;
-  free(apagar);
-  if (f->inicio == NULL){
+  *reg = f->fim->reg;
+
+  PONT jumper = f->cabeca->prox;
+
+  if (!(jumper->prox)) { // Caso a fila tenha apenas um elemento restante
+    free(jumper);
+    jumper = NULL;
+    f->cabeca->prox = NULL;
     f->fim = NULL;
+  } else {
+    while (jumper->prox != f->fim) jumper = jumper->prox;
+    free(jumper->prox);
+    jumper->prox = NULL;
+    f->fim = jumper;
   }
+
   return true;
 } /* excluirDaFila */
 
 
 
-/* Exibição da fila sequencial */
+/* Exibiï¿½ï¿½o da fila sequencial */
 void exibirFila(FILA* f){
   PONT end = f->cabeca->prox;
   printf("Fila: \" ");
