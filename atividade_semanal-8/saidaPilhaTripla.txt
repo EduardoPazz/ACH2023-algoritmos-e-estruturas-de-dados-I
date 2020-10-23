@@ -1,0 +1,85 @@
+Comandos validos: 
+   i <chave1>: inserir elemento com chave=chave1, na pilha 1
+   j <chave1>: inserir elemento com chave=chave1, na pilha 2
+   k <chave1>: inserir elemento com chave=chave1, na pilha 3
+   e : excluir elemento com chave=chave1, na pilha 1
+   f : excluir elemento com chave=chave1, na pilha 2
+   g : excluir elemento com chave=chave1, na pilha 3
+   n : imprimir pilha 1
+   o : imprimir pilha 2
+   p : imprimir pilha 2
+   d : destruir (zerar) pilhas
+   l : exibir log de utilizacao do pilha
+   h : exibir esta mensagem de ajuda
+   1 : exibir a chave e o endereco do topo, pilha 1
+   2 : exibir a chave e o endereco do topo, pilha 2
+   3 : exibir a chave e o endereco do topo, pilha 3
+   q : sair (quit)
+Elemento 1 inserido corretamente na pilha 1.
+Elemento 2 inserido corretamente na pilha 2.
+Elemento 3 inserido corretamente na pilha 3.
+Numero de elementos na pilha 1: 1.
+Numero de elementos na pilha 2: 1.
+Numero de elementos na pilha 3: 1.
+Tamanho do pilha (em bytes): 40.
+Pilha 1: " 1 "
+Pilha 2: " 2 "
+Pilha 3: " 3 "
+Elemento 5 inserido corretamente na pilha 2.
+Elemento 4 inserido corretamente na pilha 2.
+Pilha 2: " 4 5 2 "
+Elemento 6 inserido corretamente na pilha 2.
+Pilha 2: " 6 4 5 2 "
+Nao foi possivel inserir elemento 7.
+Numero de elementos na pilha 1: 1.
+Numero de elementos na pilha 2: 4.
+Numero de elementos na pilha 3: 1.
+Tamanho do pilha (em bytes): 40.
+Pilhas zeradas.
+Numero de elementos na pilha 1: 0.
+Numero de elementos na pilha 2: 0.
+Numero de elementos na pilha 3: 0.
+Tamanho do pilha (em bytes): 40.
+Elemento 1 inserido corretamente na pilha 1.
+Elemento 2 inserido corretamente na pilha 1.
+Elemento 3 inserido corretamente na pilha 1.
+Elemento 4 inserido corretamente na pilha 1.
+Elemento 5 inserido corretamente na pilha 1.
+Elemento 6 inserido corretamente na pilha 1.
+Nao foi possivel inserir elemento 7.
+Nao foi possivel inserir elemento 8.
+Nao foi possivel inserir elemento 9.
+Elemento 6 excluido corretamente da pilha 1.
+Nao foi possivel excluir elemento pilha 2 - pilha vazio.
+Nao foi possivel excluir elemento pilha 3 - pilha vazio.
+Elemento 10 inserido corretamente na pilha 2.
+Primeiro elemento pilha 1: 5 encontrado no endereco 4.
+Primeiro elemento pilha 2: 10 encontrado no endereco 5.
+Nao foi possivel encontrar o primeiro elemento (pilha vazia).
+Elemento 5 excluido corretamente da pilha 1.
+Elemento 11 inserido corretamente na pilha 2.
+Pilha 1: " 4 3 2 1 "
+Pilha 2: " 11 10 "
+Pilha 3: " "
+Numero de elementos na pilha 1: 4.
+Numero de elementos na pilha 2: 2.
+Numero de elementos na pilha 3: 0.
+Tamanho do pilha (em bytes): 40.
+Elemento 11 excluido corretamente da pilha 2.
+Elemento 13 inserido corretamente na pilha 3.
+Pilha 1: " 4 3 2 1 "
+Pilha 2: " 10 "
+Pilha 3: " 13 "
+Numero de elementos na pilha 1: 4.
+Numero de elementos na pilha 2: 1.
+Numero de elementos na pilha 3: 1.
+Tamanho do pilha (em bytes): 40.
+Elemento 13 excluido corretamente da pilha 3.
+Elemento 14 inserido corretamente na pilha 2.
+Pilha 1: " 4 3 2 1 "
+Pilha 2: " 14 10 "
+Pilha 3: " "
+Numero de elementos na pilha 1: 4.
+Numero de elementos na pilha 2: 2.
+Numero de elementos na pilha 3: 0.
+Tamanho do pilha (em bytes): 40.
