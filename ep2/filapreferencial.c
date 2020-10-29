@@ -1,11 +1,11 @@
 /*********************************************************************/
 /**   ACH2023 - Algoritmos e Estruturas de Dados I                  **/
-/**   EACH-USP - Seugndo Semestre de 2020                           **/
-/**   <turma> - Prof. Luciano Antonio Digiampietri                  **/
+/**   EACH-USP - Segundo Semestre de 2020                           **/
+/**   94 - Prof. Luciano Antonio Digiampietri                       **/
 /**                                                                 **/
 /**   EP2 - Fila Preferencial                                       **/
 /**                                                                 **/
-/**   <nome do(a) aluno(a)>                   <numero USP>          **/
+/**   João Eduardo da Paz Silva                   11845514          **/
 /**                                                                 **/
 /*********************************************************************/
 
@@ -72,9 +72,88 @@ void exibirLog(PFILA f){
 bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial){
   bool resposta = false;
 
-  /* COMPLETAR */
+  // Condições de escape
+  if (id < 0 || buscarID(f, id) != NULL) return resposta;
 
+  // Alocação
+  PONT novoElemento = (PONT) malloc(sizeof(ELEMENTO));
+
+  // Preenchimento dos campos
+  novoElemento->id = id;
+  novoElemento->ehPreferencial = ehPreferencial;
+
+  // Inserção na fila
+  PONT ant = f->fimGeral;
+
+  if (ant != NULL) ant->prox = novoElemento;
+  else f->inicioGeral = novoElemento; // Caso o novoElemento seja o primeiro a ser inserido na fila
+
+  f->fimGeral = novoElemento;
+
+  // Refazer o processo de alocação, preenchimento e inserção caso o novo elemento seja preferencial
+  if (ehPreferencial) {
+    // Alocação
+    PONT novoElementoPreferencial = (PONT) malloc(sizeof(ELEMENTO));
+
+    // Preenchimento dos campos
+    novoElementoPreferencial->id = id;
+    novoElementoPreferencial->ehPreferencial = ehPreferencial;
+
+    // Inserção na fila
+    ant = f->fimPref;
+    if (ant != NULL) ant->prox = novoElementoPreferencial;
+    else f->inicioPref = novoElementoPreferencial; // Caso o novoElementoPreferencial seja o primeiro a ser inserido na fila
+
+    f->fimPref = novoElementoPreferencial;    
+  }
+
+  resposta = true;
   return resposta;
+}
+
+
+void removerDaFilaGeral(PFILA f, int id) {
+  // Encontra o elemento a ser removido e seu anterior
+  PONT ant = NULL;
+  PONT atual = f->inicioGeral;
+
+  while (true) {
+    if (atual->id == id) break;
+    ant = atual;
+    atual = atual->prox;
+  }
+
+  if (ant == NULL) { // Se "atual" for o primeiro da fila
+    f->inicioGeral = atual->prox;
+    if (f->inicioGeral == NULL) f->fimGeral = NULL; // Se "atual" era o único elemento, a fila fica vazia
+  } else { 
+    ant->prox = atual->prox; 
+    if (atual->prox == NULL) f->fimGeral = ant; // Se "atual" era o último elemento da fila
+  }
+  
+  free(atual);
+}
+
+void removerDaFilaPreferencial(PFILA f, int id) {
+  // Encontra o elemento a ser removido e seu anterior
+  PONT ant = NULL;
+  PONT atual = f->inicioPref;
+
+  while (true) {
+    if (atual->id == id) break;
+    ant = atual;
+    atual = atual->prox;
+  }
+
+  if (ant == NULL) { // Se "atual" for o primeiro da fila
+    f->inicioPref = atual->prox;
+    if (f->inicioPref == NULL) f->fimPref = NULL; // Se "atual" era o único elemento, a fila fica vazia
+  } else { 
+    ant->prox = atual->prox; 
+    if (atual->prox == NULL) f->fimPref = ant; // Se "atual" era o último elemento da fila
+  }
+  
+  free(atual);
 }
 
 
@@ -82,8 +161,18 @@ bool inserirPessoaNaFila(PFILA f, int id, int ehPreferencial){
 bool atenderPrimeiraDaFilaPreferencial(PFILA f, int* id){
   bool resposta = false;
 
-  /* COMPLETAR */
+  if (f->inicioGeral == NULL) return resposta;
 
+  if (f->inicioPref != NULL) {
+    *id = f->inicioPref->id;
+    removerDaFilaPreferencial(f, *id);
+    removerDaFilaGeral(f, *id);
+  } else { 
+    *id = f->inicioGeral->id;
+    removerDaFilaGeral(f, *id);
+  }
+
+  resposta = true;
   return resposta;
 }
 
@@ -92,8 +181,14 @@ bool atenderPrimeiraDaFilaPreferencial(PFILA f, int* id){
 bool atenderPrimeiraDaFilaGeral(PFILA f, int* id){
   bool resposta = false;
 
-  /* COMPLETAR */
+  if (f->inicioGeral == NULL) return resposta;
 
+  *id = f->inicioGeral->id;
+
+  if (f->inicioGeral->ehPreferencial) removerDaFilaPreferencial(f, *id);
+  removerDaFilaGeral(f, *id);
+
+  resposta = true;
   return resposta;
 }
 
@@ -102,8 +197,14 @@ bool atenderPrimeiraDaFilaGeral(PFILA f, int* id){
 bool desistirDaFila(PFILA f, int id){
   bool resposta = false;
 
-  /* COMPLETAR */
+  PONT aSerRemovido = buscarID(f, id);
 
+  if (aSerRemovido == NULL) return resposta;
+
+  if (aSerRemovido->ehPreferencial) removerDaFilaPreferencial(f, id);
+  removerDaFilaGeral(f, id);
+
+  resposta = true;
   return resposta;
 }
 
