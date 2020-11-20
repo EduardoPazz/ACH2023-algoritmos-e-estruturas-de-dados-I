@@ -99,8 +99,11 @@ PONT criarRaiz(TIPOCHAVE novaChave){
 void encontrarMinMaxRec(PONT raiz, char* min, char* max){
    if (!raiz) return;
 
-   /* COMPLETAR */
-  
+   if (*min > raiz->chave) *min = raiz->chave;
+   if (*max < raiz->chave) *max = raiz->chave;
+
+   encontrarMinMaxRec(raiz->ultimoFilho, min, max);
+   encontrarMinMaxRec(raiz->proximoIrmao, min, max);
 }
 
 bool encontrarMinMax(PONT raiz, char* min, char* max){
@@ -162,6 +165,11 @@ int main(){
   printf("Altura: %i\n", altura(raiz));    
   exibirArvore(raiz);
   printf("\n");
+  inserirFilho(raiz,'k','j');
+  printf("Numero de nos: %i\n", numeroDeNos(raiz));
+  printf("Altura: %i\n", altura(raiz));    
+  exibirArvore(raiz);
+  printf("\n");  
   char min1, max1;
   if (encontrarMinMax(raiz, &min1, &max1)){
     printf("Menor chave na arvore: %c, maior chave na arvore: %c\n", min1, max1);
