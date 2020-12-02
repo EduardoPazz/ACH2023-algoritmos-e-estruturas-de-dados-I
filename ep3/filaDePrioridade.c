@@ -51,7 +51,9 @@ int tamanho(PFILA f){
   return tam;
 }
 
-void maxHeapfy(PFILA f, PONT elemento) {
+// Usado apenas na inserção e no aumento de prioridade
+void maxHeapfyBottomUp(PFILA f, PONT elemento) {
+
   // Nó Raiz não possui pai
   if (elemento->posicao == 0) return;
 
@@ -69,7 +71,50 @@ void maxHeapfy(PFILA f, PONT elemento) {
     f->heap[tmpPosicao] = tmpNo;
     tmpNo->posicao = tmpPosicao;
 
-    maxHeapfy(f, elemento);
+    maxHeapfyBottomUp(f, elemento);
+  }
+
+  // Fim da função
+}
+
+void maxHeapfyTopDown(PFILA f, PONT elemento) {
+  if (elemento == NULL) return;
+
+
+  int indiceFilhoEsq = (2 * elemento->posicao) + 1;  
+  int indiceFilhoDir = (2 * elemento->posicao) + 2;
+  
+  // Testa se o índice dos filhos é válido
+  if (indiceFilhoDir >= f->elementosNoHeap) indiceFilhoDir = -1;
+  if (indiceFilhoEsq >= f->elementosNoHeap) indiceFilhoEsq = -1;
+
+  if (indiceFilhoEsq == -1) return; // Elemento é uma folha, já que se ele não tem nem filho à esquerda, sequer terá à direita
+
+  // Assumimos por ora que o filho à esquerda é o maior
+  int indiceMaiorFilho = indiceFilhoEsq;
+
+  if (indiceFilhoDir >= 2) { // Testamos se existe um filho à direita. O menor índice possível para um nó seja filho à direita de outro nó é pelo menos 2
+    
+    if (f->heap[indiceFilhoEsq]->prioridade < f->heap[indiceFilhoDir]->prioridade) {
+      indiceMaiorFilho = indiceFilhoDir;
+    }
+  }
+
+
+
+  if (elemento->prioridade < f->heap[indiceMaiorFilho]->prioridade) {
+    PONT tmpNo = f->heap[indiceMaiorFilho];
+    int tmpPosicao = elemento->posicao;
+
+    // Coloca o ex-pai no lugar do filho
+    f->heap[indiceMaiorFilho] = elemento;
+    elemento->posicao = indiceMaiorFilho;
+
+    // Coloca o ex-filho no lugar do pai
+    f->heap[tmpPosicao] = tmpNo;
+    tmpNo->posicao = tmpPosicao;
+    
+    maxHeapfyTopDown(f, elemento); 
   }
 }
 
@@ -77,8 +122,9 @@ bool inserirElemento(PFILA f, int id, float prioridade){
   bool res = false;
   
   // Condições de escape
+
   if (id < 0 || id >= f->maxElementos) return res;
-  if (f->arranjo[id] != NULL) return res;
+  if (f->arranjo[id] != NULL) return res;  
   
   // Aloca memória pro novo elemento
   PONT novoElemento = (PONT) malloc(sizeof(ELEMENTO));
@@ -87,13 +133,14 @@ bool inserirElemento(PFILA f, int id, float prioridade){
   novoElemento->id = id;
   novoElemento->prioridade = prioridade;
   novoElemento->posicao = f->elementosNoHeap;
-  /* printf("posicao: %i\n", f->elementosNoHeap); fflush(stdout); */
+
   // Atualiza informações da fila
   f->arranjo[id] = novoElemento;
   f->heap[f->elementosNoHeap] = novoElemento;
   (f->elementosNoHeap)++;  
 
-  maxHeapfy(f, novoElemento);
+  // Correção das posições
+  maxHeapfyBottomUp(f, novoElemento);
 
 
   // Fim
@@ -104,24 +151,69 @@ bool inserirElemento(PFILA f, int id, float prioridade){
 
 bool aumentarPrioridade(PFILA f, int id, float novaPrioridade){
   bool res = false;
+
+  // Condições de invalidez
+  if (id < 0 || id >= f->maxElementos) return res;
+  PONT elemento = f->arranjo[id];
+  if (elemento == NULL) return res;
+  if (elemento->prioridade >= novaPrioridade) return res;
+
+  // Troca de prioridade
+  elemento->prioridade = novaPrioridade;
+
+  // Correção das posições
+  maxHeapfyBottomUp(f, elemento);
   
-  /* COMPLETAR */
-  
+  // Fim
+  res = true;
+
   return res;
 }
 
 bool reduzirPrioridade(PFILA f, int id, float novaPrioridade){
   bool res = false;
+  // Condições de invalidez
+  if (id < 0 || id >= f->maxElementos) return res;
+  PONT elemento = f->arranjo[id];
+  if (elemento == NULL) return res;
+  if (elemento->prioridade <= novaPrioridade) return res;
+
+  // Troca de prioridade
+  elemento->prioridade = novaPrioridade;
+
+  // Correção das posições
+  maxHeapfyTopDown(f, elemento);
   
-  /* COMPLETAR */
-  
+  // Fim
+  res = true;
+
   return res;
 }
 
 PONT removerElemento(PFILA f){
   PONT res = NULL;
   
-  /* COMPLETAR */
+  if (f->elementosNoHeap == 0) return res;
+
+  // Armazena o elemento a ser removido
+  res = f->heap[0];
+  
+  // Coloca o último elemento no lugar do primeiro
+  f->heap[0] = f->heap[f->elementosNoHeap - 1];
+  f->heap[0]->posicao = 0;
+
+  
+  // Limpa a posição do último elemento e diminui a contagem de elementos
+  f->heap[f->elementosNoHeap - 1] = NULL;
+  (f->elementosNoHeap)--;
+  
+  // Limpa o registro do elemento removido do array de id's
+
+  f->arranjo[res->id] = NULL;
+  
+
+  maxHeapfyTopDown(f, f->heap[0]);
+  
   
   return res;
 }
@@ -129,8 +221,14 @@ PONT removerElemento(PFILA f){
 bool consultarPrioridade(PFILA f, int id, float* resposta){
   bool res = false;
   
-  /* COMPLETAR */
+  if (id < 0 || id >= f->maxElementos) return res;
+  PONT elemento = f->arranjo[id];
+  if (elemento == NULL) return res;
+
+  *resposta = elemento->prioridade;
   
+  res = true;
+
   return res;
 }
 
